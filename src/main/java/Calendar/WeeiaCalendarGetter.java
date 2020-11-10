@@ -22,6 +22,9 @@ public class WeeiaCalendarGetter {
 			stringBuilder.append("http://www.weeia.p.lodz.pl/pliki_strony_kontroler/kalendarz.php?rok=");
 			stringBuilder.append(year);
 			stringBuilder.append("&miesiac=");
+			if (month.length() == 1) {
+				month = "0" + month;
+			}
 			stringBuilder.append(month);
 			stringBuilder.append("&lang=1");
 			oracle = new URL(stringBuilder.toString());
