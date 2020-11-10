@@ -1,7 +1,13 @@
 # Read Me First
-The following was discovered as part of building this project:
+Weeia calendar to ICAL Api
 
-* The original package name '.Calendar' is invalid and this project uses 'Calendar' instead.
+so far parts that work:
+
+if you input line in url program retrives calendar data as html doc with jsoup from weeia.p.lodz.pl and prints info
+ in console work is very much in progress right now
+
+"http://localhost:8080/?year=<Input_year_here>&month=<input_month_here>"
+
 
 # Getting Started
 
