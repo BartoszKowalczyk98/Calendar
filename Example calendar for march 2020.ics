@@ -1,0 +1,68 @@
+BEGIN:VCALENDAR
+PRODID:-//Bartosz Kowalczyk//iCal4j 1.0//PL
+VERSION:2.0
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+DTSTAMP:20201124T140306Z
+DTSTART;VALUE=DATE:20200309
+SUMMARY:First Step to Fields Medal
+UID:test@example.com
+URL:javascript:void();
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20201124T140306Z
+DTSTART;VALUE=DATE:20200313
+SUMMARY:Finał konkursu InfoSukces
+UID:test@example.com
+URL:javascript:void();
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20201124T140306Z
+DTSTART;VALUE=DATE:20200316
+SUMMARY:Matura próbna Matematyka podstawowa
+UID:test@example.com
+URL:javascript:void();
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20201124T140306Z
+DTSTART;VALUE=DATE:20200317
+SUMMARY:Matura próbna Matematyka rozszerzona
+UID:test@example.com
+URL:javascript:void();
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20201124T140306Z
+DTSTART;VALUE=DATE:20200318
+SUMMARY:Matura próbna Fizyka rozszerzona
+UID:test@example.com
+URL:javascript:void();
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20201124T140306Z
+DTSTART;VALUE=DATE:20200319
+SUMMARY:Matura próbna Chemia rozszerzona
+UID:test@example.com
+URL:javascript:void();
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20201124T140306Z
+DTSTART;VALUE=DATE:20200323
+SUMMARY:Finał konkursu Fascynująca Fizyka - poziom podstawowy
+UID:test@example.com
+URL:javascript:void();
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20201124T140306Z
+DTSTART;VALUE=DATE:20200325
+SUMMARY:Finał konkursu Fascynująca Fizyka - poziom ponadpodstawowy
+UID:test@example.com
+URL:javascript:void();
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20201124T140306Z
+DTSTART;VALUE=DATE:20200327
+SUMMARY:Finał konkursu Piękne doświadczenie\, Fascynujące Wyjaśnienie
+UID:test@example.com
+URL:javascript:void();
+END:VEVENT
+END:VCALENDAR
