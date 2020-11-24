@@ -1,5 +1,6 @@
 package Calendar;
 
+import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.ProdId;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,12 @@ public class WeeiaCalendarGetter {
 
 			// Generate a UID for the event..
 			UidGenerator ug = () -> new Uid("test@example.com");
+
+			//Creating and filling ics file with our calendar
+			FileOutputStream fout = new FileOutputStream("mycalendar.ics");
+
+			CalendarOutputter outputter = new CalendarOutputter();
+			outputter.output(calendar, fout);
 
 		} catch (IOException e) {
 			e.printStackTrace();
