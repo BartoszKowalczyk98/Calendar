@@ -1,5 +1,11 @@
 package Calendar;
 
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.model.property.Version;
+import net.fortuna.ical4j.util.UidGenerator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -37,6 +43,19 @@ public class WeeiaCalendarGetter {
 					dataHolderClasses.add(new DataHolderClass(year, month, a.text(), url, p.text()));
 				}
 			}
+
+			/*
+			Create calendar and input some basic data inside most of code below was taken from:
+			https://ical4j.github.io/ical4j-user-guide/examples/
+			 */
+			Calendar calendar = new Calendar();
+			calendar.getProperties().add(new ProdId("-//Bartosz Kowalczyk//iCal4j 1.0//PL"));
+			calendar.getProperties().add(Version.VERSION_2_0);
+			calendar.getProperties().add(CalScale.GREGORIAN);
+
+			// Generate a UID for the event..
+			UidGenerator ug = () -> new Uid("test@example.com");
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
