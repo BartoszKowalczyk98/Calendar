@@ -7,6 +7,7 @@ import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.UidGenerator;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,16 +17,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class WeeiaCalendarGetter {
 	@RequestMapping(method = RequestMethod.GET)
-	public String getWeeiaCalendar(@RequestParam("year") String year, @RequestParam("month") String month) {
+	public String getWeeiaCalendar(@RequestParam("year") String year, @RequestParam("month") String month, HttpServletResponse response) {
 		//jsoup beginners guide taken from https://jsoup.org/cookbook/input/load-document-from-url
+		String result = "Error";
 		try {
 			StringBuilder stringBuilder = new StringBuilder();
 			stringBuilder.append("http://www.weeia.p.lodz.pl/pliki_strony_kontroler/kalendarz.php?rok=").append(year).append("&miesiac=");
@@ -64,10 +66,18 @@ public class WeeiaCalendarGetter {
 			CalendarOutputter outputter = new CalendarOutputter();
 			outputter.output(calendar, fout);
 
+			//download file as response from server
+			InputStream inputStream = new FileInputStream(new File("mycalendar.ics"));
+			response.setContentType("text/calendar;charset=utf-8");
+			IOUtils.copy(inputStream, response.getOutputStream());
+			response.flushBuffer();
+
+			//if everything goes as expected api will also return calendar as html body
+			result=calendar.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return "test";
+		return result;
 	}
 	class DataHolderClass {
 		private String month;
