@@ -26,9 +26,9 @@ import java.util.List;
 @RestController
 public class WeeiaCalendarGetter {
 	@RequestMapping(method = RequestMethod.GET)
-	public String getWeeiaCalendar(@RequestParam("year") String year, @RequestParam("month") String month, HttpServletResponse response) {
+	public void getWeeiaCalendar(@RequestParam("year") String year, @RequestParam("month") String month,
+							  HttpServletResponse response) {
 		//jsoup beginners guide taken from https://jsoup.org/cookbook/input/load-document-from-url
-		String result = "Error";
 		try {
 			StringBuilder stringBuilder = new StringBuilder();
 			stringBuilder.append("http://www.weeia.p.lodz.pl/pliki_strony_kontroler/kalendarz.php?rok=").append(year).append("&miesiac=");
@@ -52,12 +52,9 @@ public class WeeiaCalendarGetter {
 
 			createAndReturnFile(response, calendar);
 
-			//if everything goes as expected api will also return calendar as html body
-			result=calendar.toString();
 		} catch (IOException | ParseException | URISyntaxException e) {
 			e.printStackTrace();
 		}
-		return result;
 	}
 
 	class DataHolderClass {
