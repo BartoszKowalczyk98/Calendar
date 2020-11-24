@@ -2,10 +2,9 @@ package Calendar;
 
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.property.CalScale;
-import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.model.property.Version;
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.UidGenerator;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.jsoup.Jsoup;
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +60,16 @@ public class WeeiaCalendarGetter {
 
 			// Generate a UID for the event..
 			UidGenerator ug = () -> new Uid("test@example.com");
+			for (DataHolderClass event : dataHolderClasses) {
+				// initialise as an all-day event..
+				String dateInString = event.year + event.month + event.day;
+				VEvent vEvent = new VEvent(new Date(dateInString), event.title);
+				vEvent.getProperties().add(ug.generateUid());
+				Url url = new Url();
+				url.setValue(event.url);
+				vEvent.getProperties().add(url);
+				calendar.getComponents().add(vEvent);
+			}
 
 			//Creating and filling ics file with our calendar
 			FileOutputStream fout = new FileOutputStream("mycalendar.ics");
@@ -74,7 +85,7 @@ public class WeeiaCalendarGetter {
 
 			//if everything goes as expected api will also return calendar as html body
 			result=calendar.toString();
-		} catch (IOException e) {
+		} catch (IOException | ParseException | URISyntaxException e) {
 			e.printStackTrace();
 		}
 		return result;
