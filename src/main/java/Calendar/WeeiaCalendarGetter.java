@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class WeeiaCalendarGetter {
@@ -18,39 +20,45 @@ public class WeeiaCalendarGetter {
 		//jsoup beginners guide taken from https://jsoup.org/cookbook/input/load-document-from-url
 		try {
 			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.append("http://www.weeia.p.lodz.pl/pliki_strony_kontroler/kalendarz.php?rok=");
-			stringBuilder.append(year);
-			stringBuilder.append("&miesiac=");
+			stringBuilder.append("http://www.weeia.p.lodz.pl/pliki_strony_kontroler/kalendarz.php?rok=").append(year).append("&miesiac=");
 			if (month.length() == 1) {
 				month = "0" + month;
 			}
-			stringBuilder.append(month);
-			stringBuilder.append("&lang=1");
+			stringBuilder.append(month).append("&lang=1");
 			Document doc = Jsoup.connect(stringBuilder.toString()).get();
 			Elements tds = doc.select("td");
+			List<DataHolderClass> dataHolderClasses = new ArrayList<>();
 			for (Element td : tds) {
 				if(td.attr("class").equals("active")){
-					System.out.println(td);
-					/* this is how it is currently printed
-<td class="active"><a class="active" href="https://facebook.com/events/s/akcja-integracja-odkryj-z-nami/3041545625959235/?ti=as">1</a>
- <div style="position: relative">
-  <div class="calendar-text">
-   <div class="InnerBox">
-    <div>
-     Akcja Integracja Online
-    </div>
-   </div>
-   <div class="Indicator"></div>
-  </div>
- </div></td>*/
+					Elements p = td.getElementsByTag("p");
+					Element a = td.child(0);
+					String url = a.attr("href");
+
+					dataHolderClasses.add(new DataHolderClass(year, month, a.text(), url, p.text()));
 				}
 			}
-			// TODO: 10.11.2020 take those element tds and make them into VEVENTs so i can build a calendar
-			System.out.println("Test");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return "test";
+	}
+	class DataHolderClass {
+		private String month;
+		private String day;
+		private String year;
+		private String url;
+		private String title;
+
+		public DataHolderClass(String year, String month, String day, String url, String title) {
+			this.month = month;
+			if (day.length() == 1) {
+				this.day = "0" + day;
+			} else
+				this.day = day;
+			this.year = year;
+			this.url = url;
+			this.title = title;
+		}
 	}
 
 }
