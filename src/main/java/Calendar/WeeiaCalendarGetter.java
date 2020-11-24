@@ -39,49 +39,18 @@ public class WeeiaCalendarGetter {
 			Document doc = Jsoup.connect(stringBuilder.toString()).get();
 			Elements tds = doc.select("td");
 			List<DataHolderClass> dataHolderClasses = new ArrayList<>();
-			for (Element td : tds) {
-				if(td.attr("class").equals("active")){
-					Elements p = td.getElementsByTag("p");
-					Element a = td.child(0);
-					String url = a.attr("href");
-
-					dataHolderClasses.add(new DataHolderClass(year, month, a.text(), url, p.text()));
-				}
-			}
+			filterDataFromWeeia(year, month, tds, dataHolderClasses);
 
 			/*
 			Create calendar and input some basic data inside most of code below was taken from:
 			https://ical4j.github.io/ical4j-user-guide/examples/
 			 */
-			Calendar calendar = new Calendar();
-			calendar.getProperties().add(new ProdId("-//Bartosz Kowalczyk//iCal4j 1.0//PL"));
-			calendar.getProperties().add(Version.VERSION_2_0);
-			calendar.getProperties().add(CalScale.GREGORIAN);
+			Calendar calendar = getCalendar();
 
 			// Generate a UID for the event..
-			UidGenerator ug = () -> new Uid("test@example.com");
-			for (DataHolderClass event : dataHolderClasses) {
-				// initialise as an all-day event..
-				String dateInString = event.year + event.month + event.day;
-				VEvent vEvent = new VEvent(new Date(dateInString), event.title);
-				vEvent.getProperties().add(ug.generateUid());
-				Url url = new Url();
-				url.setValue(event.url);
-				vEvent.getProperties().add(url);
-				calendar.getComponents().add(vEvent);
-			}
+			addEventsToCalendar(dataHolderClasses, calendar);
 
-			//Creating and filling ics file with our calendar
-			FileOutputStream fout = new FileOutputStream("mycalendar.ics");
-
-			CalendarOutputter outputter = new CalendarOutputter();
-			outputter.output(calendar, fout);
-
-			//download file as response from server
-			InputStream inputStream = new FileInputStream(new File("mycalendar.ics"));
-			response.setContentType("text/calendar;charset=utf-8");
-			IOUtils.copy(inputStream, response.getOutputStream());
-			response.flushBuffer();
+			createAndReturnFile(response, calendar);
 
 			//if everything goes as expected api will also return calendar as html body
 			result=calendar.toString();
@@ -90,6 +59,7 @@ public class WeeiaCalendarGetter {
 		}
 		return result;
 	}
+
 	class DataHolderClass {
 		private String month;
 		private String day;
@@ -107,6 +77,53 @@ public class WeeiaCalendarGetter {
 			this.url = url;
 			this.title = title;
 		}
+	}
+	private void createAndReturnFile(HttpServletResponse response, Calendar calendar) throws IOException {
+		//Creating and filling ics file with our calendar
+		FileOutputStream fout = new FileOutputStream("mycalendar.ics");
+
+		CalendarOutputter outputter = new CalendarOutputter();
+		outputter.output(calendar, fout);
+
+		//download file as response from server
+		InputStream inputStream = new FileInputStream(new File("mycalendar.ics"));
+		response.setContentType("text/calendar;charset=utf-8");
+		IOUtils.copy(inputStream, response.getOutputStream());
+		response.flushBuffer();
+	}
+
+	private void filterDataFromWeeia(String year, String month, Elements tds, List<DataHolderClass> dataHolderClasses) {
+		for (Element td : tds) {
+			if(td.attr("class").equals("active")){
+				Elements p = td.getElementsByTag("p");
+				Element a = td.child(0);
+				String url = a.attr("href");
+
+				dataHolderClasses.add(new DataHolderClass(year, month, a.text(), url, p.text()));
+			}
+		}
+	}
+
+	private void addEventsToCalendar(List<DataHolderClass> dataHolderClasses, Calendar calendar) throws ParseException, URISyntaxException {
+		UidGenerator ug = () -> new Uid("test@example.com");
+		for (DataHolderClass event : dataHolderClasses) {
+			// initialise as an all-day event..
+			String dateInString = event.year + event.month + event.day;
+			VEvent vEvent = new VEvent(new Date(dateInString), event.title);
+			vEvent.getProperties().add(ug.generateUid());
+			Url url = new Url();
+			url.setValue(event.url);
+			vEvent.getProperties().add(url);
+			calendar.getComponents().add(vEvent);
+		}
+	}
+
+	private Calendar getCalendar() {
+		Calendar calendar = new Calendar();
+		calendar.getProperties().add(new ProdId("-//Bartosz Kowalczyk//iCal4j 1.0//PL"));
+		calendar.getProperties().add(Version.VERSION_2_0);
+		calendar.getProperties().add(CalScale.GREGORIAN);
+		return calendar;
 	}
 
 }
