@@ -8,9 +8,9 @@ then creates a Calendar object using Ical4j library, fills it with events from g
 
 Example url to input in browser after running application on local machine:
 
-http://localhost:8080/?year="Input_year_here"&month="input_month_here"
+http://localhost:8080/?year=Input_year_here&month=input_month_here
 
-Replace "Input_year_here" and "input_month_here" with actuall numbers like 2020 and 03.
+Replace Input_year_here and input_month_here with actuall numbers like 2020 and 03.
 Api will generate an ics file and show prompt about downloading a file to chosen path.
 
 
