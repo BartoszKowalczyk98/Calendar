@@ -17,27 +17,16 @@ Api will generate an ics file and show prompt about downloading a file to chosen
 # Example .ics file content
 ```
 BEGIN:VCALENDAR
-
 PRODID:-//Bartosz Kowalczyk//iCal4j 1.0//PL
-
 VERSION:2.0
-
 CALSCALE:GREGORIAN
-
 BEGIN:VEVENT
-
 DTSTAMP:20201124T140435Z
-
 DTSTART;VALUE=DATE:20201001
-
 SUMMARY:
-
 UID:test@example.com
-
 URL:UrlLink
-
 END:VEVENT
-
 END:VCALENDAR
 ```
 
